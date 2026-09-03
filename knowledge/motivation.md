@@ -1,0 +1,9 @@
+I am writing to express my interest in the Principal Backend Software Engineer position at \CompanyName, as advertised. With over 17 years of experience in backend engineering, machine learning, and a Ph.D. in Computational Biophysics, I am excited about the opportunity to contribute to the Retention team at \CompanyName.
+
+At Karius Inc., I led the transition from Scala to Typescript and oversaw the architecture and design of microservices in an event-driven architecture, directly aligning with the hands-on role and technical leadership required for this position. My experience in guiding team members, spearheading complex projects, and integrating modern cloud services and microservices (particularly with AWS) positions me well to take charge in designing, implementing, and deploying new services and APIs at \CompanyName.
+
+My technical expertise is complemented by a proven track record in innovation and problem-solving, as demonstrated by my initiatives at Karius Inc., including implementing Kafka, GraphQL, and Kubernetes. This experience, along with my proficiency in multiple programming languages, aligns perfectly with the technical and innovative aspects of the role.
+
+I am particularly drawn to the opportunity at \CompanyName \space because of its commitment to leveraging technology for enhancing healthcare accessibility. The fast-paced and cooperative environment at \CompanyName \space is the ideal setting for me to utilize my skills in technical leadership, innovation, and collaboration. Furthermore, my passion for mentorship and ensuring high-quality engineering standards aligns with the responsibilities of the role.
+
+Thank you for considering my application. I am enthusiastic about the opportunity to bring my unique blend of skills and experience to \CompanyName, and I look forward to the possibility of contributing to the exciting work being done at your company.

@@ -1,0 +1,38 @@
+# Normalize line endings: store LF in the repo, check out with the
+# OS-native ending (CRLF on Windows, LF on macOS/Linux).
+* text=auto
+
+# Explicitly text (so git can normalize them even if it can't detect them)
+*.js      text
+*.jsx     text
+*.ts      text
+*.tsx     text
+*.json    text
+*.md      text
+*.css     text
+*.html    text
+*.yml     text
+*.yaml    text
+*.svg     text
+*.config.js   text
+*.config.ts   text
+
+# Always LF regardless of OS (required for these to work correctly)
+*.sh      text eol=lf
+*.bash    text eol=lf
+Dockerfile text eol=lf
+
+# Never touch binary files
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.webp    binary
+*.pdf     binary
+*.zip     binary
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.eot     binary
+*.mp4     binary
