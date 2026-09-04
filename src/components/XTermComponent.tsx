@@ -167,9 +167,9 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
           break;
         case "download":
           terminal.writeln(
-            `${DIM}Downloading the latest resume (PDF)…${RESET}`
+            `${DIM}Downloading the latest resume…${RESET}`
           );
-          window.open("/resume.pdf", "_blank");
+          window.open("/api/download", "_blank");
           break;
         case "contact":
           terminal.writeln(
