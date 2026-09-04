@@ -19,12 +19,10 @@ const ERROR_MARK = RED + "✻ " + RESET;
 
 interface XTermComponentProps {
   showOrHideVisuals: (show: Show, visible: boolean) => void;
-  onProgressChanged: (inProgress: boolean) => void;
 }
 
 const XTermComponent: React.FC<XTermComponentProps> = ({
   showOrHideVisuals: onCustomFunction,
-  onProgressChanged,
 }) => {
   const terminalRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +33,7 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
     // undefined (reading 'dimensions')".
     const terminal = new Terminal({
       cursorBlink: true,
+      convertEol: true, // treat '\n' as '\r\n' so model line breaks render correctly
       fontSize: 16,
       fontFamily: '"Fira Code", monospace',
       theme: {
@@ -110,6 +109,9 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
     }
 
     function handleInput(data: string | Uint8Array) {
+      // Claude Code blocks input while a response is being generated.
+      if (isThinking) return;
+
       if (data === "\x1b") {
         // Escape key
         onCustomFunction(Show.All, false);
@@ -188,26 +190,57 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
       }
     }
 
+    // Inline "thinking" spinner drawn inside the terminal, like Claude Code.
+    let isThinking = false;
+    let thinkingInterval: ReturnType<typeof setInterval> | undefined;
+    let thinkingFrame = 0;
+    const THINKING_DOTS = ["", ".", "..", "..."];
+
+    function drawThinking() {
+      const dot =
+        THINKING_DOTS[Math.floor(thinkingFrame / 4) % THINKING_DOTS.length];
+      // Alternate bright/dim ✻ to suggest the spinning Claude burst.
+      const mark =
+        thinkingFrame % 2 === 0 ? `${ORANGE}✻${RESET}` : `${DIM}✻${RESET}`;
+      terminal.write("\x1b[2K\r"); // clear line, back to column 0
+      terminal.write(`${mark} ${DIM}Thinking${dot}${RESET}`);
+      thinkingFrame++;
+    }
+
+    function startThinking() {
+      isThinking = true;
+      thinkingFrame = 0;
+      drawThinking();
+      thinkingInterval = setInterval(drawThinking, 100);
+    }
+
+    function stopThinking() {
+      isThinking = false;
+      if (thinkingInterval !== undefined) {
+        clearInterval(thinkingInterval);
+        thinkingInterval = undefined;
+      }
+      terminal.write("\x1b[2K\r"); // erase spinner so the reply takes its place
+    }
+
     async function communicateWithAi(input: string) {
       const data = { question: input };
-      onProgressChanged(true);
+      startThinking();
       try {
         const res = await fetch("/api/chat", {
           method: "POST",
           body: JSON.stringify(data),
         });
-        onProgressChanged(false);
         const jsonRes = await res.json();
         console.log(JSON.stringify(jsonRes));
         const answer = jsonRes.message;
 
-        terminal.writeln("");
+        stopThinking();
         terminal.writeln(CLAUDE_MARK + (answer || "").trimEnd());
         terminal.writeln("");
         console.log("Assistant responds:", answer);
       } catch {
-        onProgressChanged(false);
-        terminal.writeln("");
+        stopThinking();
         terminal.writeln(
           ERROR_MARK + "Failed to answer this question. Try asking differently."
         );
@@ -248,6 +281,7 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
       return () => {
         clearTimeout(initialFit);
         clearTimeout(resizeTimeout);
+        if (thinkingInterval !== undefined) clearInterval(thinkingInterval);
         window.removeEventListener("resize", handleResize);
         terminal.dispose();
       };

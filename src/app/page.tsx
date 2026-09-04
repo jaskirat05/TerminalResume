@@ -1,8 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Timeline from "@/components/TimeLine";
-import ClaudeThinkingIndicator from "@/components/ClaudeThinkingIndicator";
 import { employmentNewestFirst } from "./data/employment";
 import { educationNewestFirst } from "./data/education";
 import { Show } from "./models";
@@ -14,8 +13,6 @@ const TerminalPage: React.FC = () => {
   const [isXTermLoaded, setIsXTermLoaded] = useState(false);
   const [showEmployment, setShowEmployment] = useState(false);
   const [showEducation, setShowEducation] = useState(false);
-
-  const [inProgress, setInProgress] = useState(false);
 
   useEffect(() => {
     setIsXTermLoaded(true);
@@ -49,10 +46,6 @@ const TerminalPage: React.FC = () => {
         setShowEducation(false);
         break;
     }
-  };
-
-  const handleProgressChanged = (inProgress: boolean) => {
-    setInProgress(inProgress);
   };
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -101,21 +94,12 @@ const TerminalPage: React.FC = () => {
           {isXTermLoaded && (
             <div
               className={`h-full w-full transition-opacity duration-500 ${
-                showEmployment || showEducation || inProgress
+                showEmployment || showEducation
                   ? "opacity-50"
                   : "opacity-100"
               }`}
             >
-              <XTermComponent
-                showOrHideVisuals={showOrHideVisuals}
-                onProgressChanged={handleProgressChanged}
-              />
-            </div>
-          )}
-
-          {inProgress && (
-            <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center pointer-events-none">
-              <ClaudeThinkingIndicator />
+              <XTermComponent showOrHideVisuals={showOrHideVisuals} />
             </div>
           )}
         </div>
