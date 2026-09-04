@@ -48,3 +48,12 @@ body {
   padding: 10%;
   z-index: 100;
 }
+
+/* Hide the xterm terminal scrollbar while keeping scrollback functional */
+.xterm .xterm-viewport {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
+}
+.xterm .xterm-viewport::-webkit-scrollbar {
+  display: none; /* Chrome / Safari / Edge (Chromium) */
+}

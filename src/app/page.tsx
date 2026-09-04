@@ -71,7 +71,7 @@ const TerminalPage: React.FC = () => {
         </p>
       </header>
       <div className="flex flex-grow justify-center items-center bg-customBlack">
-        <div className="terminal-container relative w-4/6 bg-customBlack h-full p-4">
+        <div className="terminal-container relative w-full bg-customBlack h-full p-4">
           {showEmployment && (
             <div id="overlay" onClick={handleOutsideClick}>
               <div id="overlay-content" onClick={handleOutsideClick}>

@@ -12,10 +12,11 @@ const DIM = "\x1b[2m";
 const RESET = "\x1b[0m";
 const RED = "\x1b[38;2;224;87;75m"; // #E0574B — Claude theme red, for errors
 const PROMPT = ORANGE + "❯ " + RESET;
-// Claude Code marks assistant responses with its ✻ burst; mirror the ❯ prompt
-// so replies read as plain warm-white text with an orange accent (no green/emoji).
-const CLAUDE_MARK = ORANGE + "✻ " + RESET;
 const ERROR_MARK = RED + "✻ " + RESET;
+// Assistant responses render on a subtle panel (like Claude Code) so they
+// stand apart from the user's typed input.
+const RESPONSE_BG = "\x1b[48;2;38;38;38m"; // #262626 — subtle panel
+const RESPONSE_FG = "\x1b[38;2;232;228;220m"; // #E8E4DC — warm white
 
 interface XTermComponentProps {
   showOrHideVisuals: (show: Show, visible: boolean) => void;
@@ -223,6 +224,25 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
       terminal.write("\x1b[2K\r"); // erase spinner so the reply takes its place
     }
 
+    // Renders the assistant reply as a full-width, subtle-background panel with
+    // a small left/right margin, so it reads as a distinct block from user input.
+    function writeAssistantResponse(text: string) {
+      const indent = 2;
+      const width = terminal.cols;
+      const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
+
+      (text || "")
+        .trimEnd()
+        .split("\n")
+        .forEach((line, i) => {
+          const prefix = i === 0 ? `${ORANGE}✻ ${RESPONSE_FG}` : RESPONSE_FG;
+          let content = `${RESPONSE_BG}${" ".repeat(indent)}${prefix}${line}`;
+          const padding = Math.max(0, width - indent - stripAnsi(content).length);
+          if (padding > 0) content += " ".repeat(padding);
+          terminal.writeln(content + RESET);
+        });
+    }
+
     async function communicateWithAi(input: string) {
       const data = { question: input };
       startThinking();
@@ -236,7 +256,7 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
         const answer = jsonRes.message;
 
         stopThinking();
-        terminal.writeln(CLAUDE_MARK + (answer || "").trimEnd());
+        writeAssistantResponse(answer);
         terminal.writeln("");
         console.log("Assistant responds:", answer);
       } catch {
