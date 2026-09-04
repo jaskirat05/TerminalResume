@@ -10,7 +10,12 @@ const ORANGE = "\x1b[38;2;217;119;87m"; // #D97757
 const BOLD = "\x1b[1m";
 const DIM = "\x1b[2m";
 const RESET = "\x1b[0m";
+const RED = "\x1b[38;2;224;87;75m"; // #E0574B — Claude theme red, for errors
 const PROMPT = ORANGE + "❯ " + RESET;
+// Claude Code marks assistant responses with its ✻ burst; mirror the ❯ prompt
+// so replies read as plain warm-white text with an orange accent (no green/emoji).
+const CLAUDE_MARK = ORANGE + "✻ " + RESET;
+const ERROR_MARK = RED + "✻ " + RESET;
 
 interface XTermComponentProps {
   showOrHideVisuals: (show: Show, visible: boolean) => void;
@@ -196,14 +201,17 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
         console.log(JSON.stringify(jsonRes));
         const answer = jsonRes.message;
 
-        terminal.writeln("\x1b[32m🤖 \x1b[3m" + answer + "\x1b[23m\x1b[0m");
+        terminal.writeln("");
+        terminal.writeln(CLAUDE_MARK + (answer || "").trimEnd());
         terminal.writeln("");
         console.log("Assistant responds:", answer);
       } catch {
         onProgressChanged(false);
+        terminal.writeln("");
         terminal.writeln(
-          "\x1b[32m🤖 \x1b[3m Failed to answer this question. Try asking differently.\x1b[23m\x1b[0m"
+          ERROR_MARK + "Failed to answer this question. Try asking differently."
         );
+        terminal.writeln("");
       }
     }
 
