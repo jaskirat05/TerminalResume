@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "^2.0.62",
     "@azure/cosmos": "^4.0.0",
     "@azure/functions": "^4.1.0",
+    "ai": "^6.0.276",
     "framer-motion": "^10.16.16",
     "next": "^14.0.4",
     "openai": "^4.24.1",

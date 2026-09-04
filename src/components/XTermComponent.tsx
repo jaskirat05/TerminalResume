@@ -187,7 +187,7 @@ const XTermComponent: React.FC<XTermComponentProps> = ({
       const data = { question: input };
       onProgressChanged(true);
       try {
-        const res = await fetch("/api/openai", {
+        const res = await fetch("/api/chat", {
           method: "POST",
           body: JSON.stringify(data),
         });
