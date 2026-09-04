@@ -57,3 +57,36 @@ body {
 .xterm .xterm-viewport::-webkit-scrollbar {
   display: none; /* Chrome / Safari / Edge (Chromium) */
 }
+
+/* Running dinosaur (Chrome T-Rex style, just running — no cacti) */
+.dino-runner {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 0;
+  z-index: 1001;
+  pointer-events: none;
+  animation: dino-run 11s linear infinite;
+}
+.dino-runner span {
+  display: inline-block;
+  font-size: 3rem;
+  line-height: 1;
+  filter: grayscale(1) sepia(1) hue-rotate(-25deg) saturate(4) brightness(0.95);
+  animation: dino-bob 0.28s ease-in-out infinite alternate;
+}
+@keyframes dino-run {
+  from {
+    transform: translateX(-6rem);
+  }
+  to {
+    transform: translateX(calc(100vw + 6rem));
+  }
+}
+@keyframes dino-bob {
+  from {
+    transform: translateY(0) rotate(-2deg) scaleX(-1);
+  }
+  to {
+    transform: translateY(-8px) rotate(3deg) scaleX(-1);
+  }
+}

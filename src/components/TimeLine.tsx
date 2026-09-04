@@ -2,62 +2,49 @@ import React, { useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { TimelineEvent } from "../app/data/event.model";
 
-interface TimelineEventProps {
-  dateFrom: string;
-  dateTo: string;
-  title: string;
-  content: string;
-  location: string;
-  index: number;
+interface TimelineItemProps {
+  event: TimelineEvent;
 }
 
-const TimelineEvent: React.FC<TimelineEventProps> = ({
-  dateFrom,
-  dateTo,
-  title,
-  content,
-  location,
-}) => {
+const TimelineItem: React.FC<TimelineItemProps> = ({ event }) => {
   const controls = useAnimation();
-  const ref = useRef(null);
-  const inView = useInView(ref);
-  useEffect(() => {
-    if (inView) {
-      controls.start("visible");
-      controls.start("scaleFull");
-    } else {
-      controls.start("hidden");
-      controls.start("scaleLow");
-    }
-  }, [controls, inView]);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true });
 
-  const variants = {
-    scaleLow: { scale: 0.2 },
-    scaleFull: { scale: 1.0 },
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
+  useEffect(() => {
+    if (inView) controls.start("visible");
+  }, [controls, inView]);
 
   return (
     <motion.div
-    id="timelineElement"
       ref={ref}
       animate={controls}
       initial="hidden"
-      variants={variants}
-      transition={{ type: "spring", duration: 1.0, bounce: 0.2 }}
-      className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
+      variants={{
+        hidden: { opacity: 0, y: 28 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.55, ease: "easeOut" }}
+      className="relative pl-10 pb-10"
     >
-      <div className="flex items-center justify-center w-5 h-5 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-emerald-500 text-slate-500 group-[.is-active]:text-emerald-50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2" />
-
-      <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.25rem)] bg-white p-4 rounded border border-slate-200 shadow">
-        <div className="flex items-center justify-between space-x-2 mb-1">
-          <div className="font-bold text-slate-900">{title}</div>
-          <time className="font-caveat font-medium text-indigo-500">
-            <span>{dateFrom}</span> - <span>{dateTo}</span>
+      <span className="absolute left-2 top-1.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full bg-claudeOrange shadow-[0_0_0_4px_#1b1b1b]" />
+      <div className="rounded-lg border border-[#3d3a36] bg-[#262626] p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+          <h3 className="text-base font-semibold text-claudeText sm:text-lg">
+            {event.title}
+          </h3>
+          <time className="font-mono text-sm text-claudeOrange">
+            {event.dateFrom} — {event.dateTo}
           </time>
         </div>
-        <div className="text-slate-500">{content}</div>
+        {event.location ? (
+          <div className="mt-1 font-mono text-xs uppercase tracking-wide text-[#6e6a63]">
+            {event.location}
+          </div>
+        ) : null}
+        <p className="mt-3 text-sm leading-relaxed text-claudeText/80">
+          {event.content}
+        </p>
       </div>
     </motion.div>
   );
@@ -68,31 +55,34 @@ interface TimelineProps {
   closeVisuals: () => void;
 }
 
-
-
 const Timeline: React.FC<TimelineProps> = ({ events, closeVisuals }) => {
-
-  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // e.target is now correctly typed as EventTarget
-    const target = e.target as HTMLElement; // Type assertion
-    console.log("closing: " + target.id)
-
-    // Check if the click is outside the content area
-    if (target.id === 'timeline' || target.id === 'timelineElement') {
-      closeVisuals();
-      console.log("closing")
-    }
-  };
   return (
-    <div 
-    id="timeline"
-    onClick={handleOutsideClick}
-    className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-      {events.map((event, index) => (
-        <TimelineEvent key={index} index={index} {...event} />
-      ))}
+    <div className="relative mx-auto w-full max-w-3xl">
+      <div className="mb-6 flex items-center justify-end">
+        <button
+          onClick={closeVisuals}
+          className="rounded-md border border-[#3d3a36] bg-[#262626] px-3 py-1 font-mono text-sm text-claudeText/70 transition-colors hover:border-claudeOrange hover:text-claudeOrange"
+        >
+          ✕ close
+        </button>
+      </div>
+
+      <div className="relative pb-40">
+        <div className="absolute left-2 top-1.5 bottom-0 w-px bg-gradient-to-b from-claudeOrange/70 via-claudeOrange/40 to-transparent" />
+        {events.map((event, index) => (
+          <TimelineItem key={index} event={event} />
+        ))}
+      </div>
+
+      <RunningDino />
     </div>
   );
 };
+
+const RunningDino: React.FC = () => (
+  <div className="dino-runner" aria-hidden="true">
+    <span>🦖</span>
+  </div>
+);
 
 export default Timeline;

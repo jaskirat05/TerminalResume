@@ -1,44 +1,28 @@
 import { TimelineEvent } from "./event.model";
 
-export const educationNewestFirst : TimelineEvent[] = [
+export const educationNewestFirst: TimelineEvent[] = [
   {
-    title: "PhD in physics",
-    dateFrom: "2012",
-    dateTo: "2015",
-    location: "Munich, Germany",
-    grade: "1.3",
-    content: "Focus: Theoretical bio-physics, molecular-dynamics simulations. PhD thesis: Recognition of UV-induced DNA Damage - A Molecular Dynamics Analysis."
+    title: "Toronto Metropolitan University",
+    dateFrom: "2025",
+    dateTo: "Present",
+    location: "Toronto, ON",
+    content:
+      "Master's studies in Web, Digital/Multimedia and Information Resources Design (not completed). Shifted focus to Generative AI, Machine Learning, LLMs, and applied AI engineering.",
   },
   {
-    title: "Diploma (masters) in physics",
-    dateFrom: "2005",
-    dateTo: "2011",
-    location: "Bonn, Germany",
-    grade: "1.3",
-    content: "Focus: Theoretical condensed matter physics. Diploma thesis: Transport properties of multi-level quantum-dots coupled to normal metals and superconductors."
+    title: "Lambton College",
+    dateFrom: "2021",
+    dateTo: "2023",
+    location: "Toronto, ON",
+    content:
+      "Post-graduate diploma in Marketing & Professional Sales — business strategy, professional communication, sales, marketing, customer engagement, and analytical decision-making.",
   },
   {
-    title: "Exchange program",
-    dateFrom: "2008",
-    dateTo: "2009",
-    location: "Canberra, Australia",
-    grade: "High Distinction (HD)",
-    content: "One year in Australia as an exchange student and exploring new fields in physics such as biophysics."
+    title: "Vivekananda Institute of Professional Studies",
+    dateFrom: "2016",
+    dateTo: "2019",
+    location: "New Delhi, India",
+    content:
+      "Bachelor of Computer Applications (BCA) — computer science, software development, programming, databases, and information technology.",
   },
-  {
-    title: "Program Foerdern, fordern, forschen",
-    dateFrom: "2003",
-    dateTo: "2005",
-    location: "Bonn, Germany",
-    grade: "",
-    content: "Successful participation in a university program for high school students in the following classes: Experimental physics II, Linear Algebra I and II, Analysis I and II, Astronomy I."
-  },
-  {
-    title: "Abitur (high school)",
-    dateFrom: "1996",
-    dateTo: "2005",
-    location: "Bonn, Germany",
-    grade: "1.1",
-    content: ""
-  }
 ];
